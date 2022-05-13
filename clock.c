@@ -47,7 +47,7 @@ void CLOCK_updateTime(void) {
 		time.hours = 0;
 		time.day +=1;
 	}
-	if (time.days == meses[time.months - 1) {
+	if (time.days == meses[time.months - 1) { //Comparo el mes con mi vector de meses para ver si considero 31, 30 o 28 días.
 		time.days = 1;
 		time.month +=1;
 	}
