@@ -1,8 +1,6 @@
-#ifndef EDITION_MEF_H_
 #define EDITION_MEF_H_
+#ifndef EDITION_MEF_H_
 
-#include <stdlib.h>
-#include "lcd.h"
 #include "clock.h"
 
 typedef enum {
@@ -14,7 +12,7 @@ typedef enum {
   EDIT_SECOND,
   EDIT_DONE,
   EDIT_CANCELED
-} edition_mef_state;
+} EDITION_MEF_STATE;
 
 void edition_mef_init(void);
 void edition_mef_update(TIME);

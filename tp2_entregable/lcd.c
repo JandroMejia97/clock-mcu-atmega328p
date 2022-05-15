@@ -382,11 +382,3 @@ void LCDprintTwoDigitsNumber(uint8_t number) {
 	LCDsendChar(number/10 + '0');
 	LCDsendChar(number%10 + '0');
 }
-
-void LCDprintTime(TIME t) {
-	LCDprintTwoDigitsNumber(t.hours);
-	LCDsendChar(':');
-	LCDprintTwoDigitsNumber(t.minutes);
-	LCDsendChar(':');
-	LCDprintTwoDigitsNumber(t.seconds);
-}

@@ -10,7 +10,6 @@
 #include <avr/interrupt.h>
 #include "lcd.h"
 #include "keypad.h"
-#include "MCU_Init.h"
 #include "MEF_GENERAL.h"
 #include "sEOS.h"
 #include "clock.h"

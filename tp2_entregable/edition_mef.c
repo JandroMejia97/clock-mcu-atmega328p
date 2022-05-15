@@ -1,9 +1,13 @@
+#include <stdlib.h>
+#include "lcd.h"
+#include "keypad.h"
 #include "edition_mef.h"
 
-static edition_mef_state edition_state;
+
+static EDITION_MEF_STATE state;
 
 void edition_mef_init() {
-  edition_state = EDIT_YEAR;
+  state = EDIT_YEAR;
 }
 
 void edition_mef_update(TIME time) {
@@ -11,9 +15,9 @@ void edition_mef_update(TIME time) {
   KEYPAD_Scan(&pressed_key);
   uint8_t min_value = 0, max_value = 99, x = 10, y = 1;
   uint8_t *value_to_edit = NULL;
-  edition_mef_state next_state = edition_state;
+  EDITION_MEF_STATE next_state = state;
 
-  switch (edition_state) {
+  switch (state) {
     case EDIT_YEAR:
       value_to_edit = &time.years;
       next_state = EDIT_MONTH;
@@ -54,24 +58,25 @@ void edition_mef_update(TIME time) {
       next_state = EDIT_DONE;
       break;
     case EDIT_DONE:
-      edition_state = EDIT_DONE;
+      CLOCK_setTime(time);
+      state = EDIT_DONE;
       break;
-    default:
-      edition_state = EDIT_YEAR;
+    case EDIT_CANCELED:
+      CLOCK_init();
       break;
   }
 
   switch (pressed_key) {
     case 'B':
     case 'C':
-      edit_data(min_value, max_value, pressed_key, &value_to_edit);
-      print_data(x, y, &value_to_edit);
+      edit_data(min_value, max_value, pressed_key, value_to_edit);
+      print_data(x, y, value_to_edit);
       break;
     case 'A':
-      edition_state = next_state;
+      state = next_state;
       break;
     case 'D':
-      edition_state = EDIT_CANCELED;
+      state = EDIT_CANCELED;
       break;
   }
 }
@@ -88,6 +93,7 @@ void edit_data(uint8_t min, uint8_t max, uint8_t pressed_key, uint8_t *data) {
 }
 
 void print_data(uint8_t x, uint8_t y, uint8_t *data) {
+  char buffer[2];
   LCDGotoXY(x, y);
-  LCDstring((uint8_t *)itoa(*data, 10), 2);
+  LCDstring((uint8_t *)itoa(*data, buffer, 10), 2);
 }

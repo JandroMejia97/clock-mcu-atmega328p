@@ -82,7 +82,6 @@ void LCDcursorRight(uint8_t);	//shif cursor right by n
 //adapted from AVRLIB - displays progress only for 8 bit variables
 void LCDprogressBar(uint8_t progress, uint8_t maxprogress, uint8_t length);
 void LCDprintTwoDigitsNumber(uint8_t);
-void LCDprintTime(TIME);
 
 
 #endif
