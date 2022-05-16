@@ -2,11 +2,10 @@
  * clock.h
  *
  */ 
-
-#include <avr/io.h>
-
 #ifndef CLOCK_H_
 #define CLOCK_H_
+
+#include <avr/io.h>
 
 typedef struct TIME {
 	uint8_t hours;
@@ -17,13 +16,11 @@ typedef struct TIME {
 	uint8_t days;
 } TIME;
 
-const uint8_t max_days_for_each_month[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+extern const uint8_t max_days_for_each_month[];
 
 TIME CLOCK_getTime(void);
 void CLOCK_init(void);
 void CLOCK_setTime(TIME);
 void CLOCK_updateTime(void);
-
-
 
 #endif /* CLOCK_H_ */

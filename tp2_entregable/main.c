@@ -24,7 +24,7 @@ int main(void)
 	// inicializar clock en 23:59:59
 	CLOCK_init();
 	// inicializar maq de estados
-	MEF_GENERAL_Init();
+	MEF_Init();
 	// habilito timers e interrupciones
 	SEOS_Init();
     while (1) 
@@ -32,7 +32,7 @@ int main(void)
 		SEOS_Dispatch_Tasks();
     }
 
-	return 1;
+	return 0;
 
 }
 
