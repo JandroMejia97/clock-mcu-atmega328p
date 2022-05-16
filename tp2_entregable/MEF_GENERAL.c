@@ -30,7 +30,7 @@ void MEF_Init() {
 }
 
 void MEF_Update() {
-  uint8_t pressed_key;
+  uint8_t pressed_key = 0xFF;
   KEYPAD_Update(&pressed_key);
   uint8_t min_value = 0, max_value = 99, x = 10, y = 1;
   uint8_t *value_to_edit = NULL;
@@ -39,6 +39,25 @@ void MEF_Update() {
   switch (state) {
     case DEFAULT:
 		defaultAndUpdate();
+		next_state = EDIT_YEAR;
+		if (KEYPAD_Update(&pressed_key)){
+			switch (pressed_key) {
+				case 'B':
+				edit_data(min_value, max_value, pressed_key, value_to_edit);
+				print_data(x, y, value_to_edit);
+				break;
+				case 'C':
+				edit_data(min_value, max_value, pressed_key, value_to_edit);
+				print_data(x, y, value_to_edit);
+				break;
+				case 'A':
+				state = next_state;
+				break;
+				case 'D':
+				state = EDIT_CANCELED;
+				break;
+			}
+		}
       break;
     case EDIT_YEAR:
       value_to_edit = &time.years;
@@ -85,20 +104,6 @@ void MEF_Update() {
       break;
     case EDIT_CANCELED:
       CLOCK_init();
-      break;
-  }
-
-  switch (pressed_key) {
-    case 'B':
-    case 'C':
-      edit_data(min_value, max_value, pressed_key, value_to_edit);
-      print_data(x, y, value_to_edit);
-      break;
-    case 'A':
-      state = next_state;
-      break;
-    case 'D':
-      state = EDIT_CANCELED;
       break;
   }
 }
