@@ -3,19 +3,42 @@
 static MEF_STATE state;
 static TIME time;
 
+static void defaultAndUpdate()
+{
+	state = DEFAULT;
+	unsigned char space[] = "      ";
+	LCDclr();
+	LCDhome();
+	time = CLOCK_getTime();
+	LCDstring(space, 6);
+	LCDprintTwoDigitsNumber(time.hours);
+	LCDsendChar(':');
+	LCDprintTwoDigitsNumber(time.minutes);
+	LCDsendChar(':');
+	LCDprintTwoDigitsNumber(time.seconds);
+	LCDGotoXY(0,1);
+	LCDstring(space, 6);
+	LCDprintTwoDigitsNumber(time.days);
+	LCDsendChar('/');
+	LCDprintTwoDigitsNumber(time.months);
+	LCDsendChar('/');
+	LCDprintTwoDigitsNumber(time.years);
+}
+
 void MEF_Init() {
-  state = DEFAULT;
+  defaultAndUpdate();
 }
 
 void MEF_Update() {
   uint8_t pressed_key;
-  KEYPAD_Scan(&pressed_key);
+  KEYPAD_Update(&pressed_key);
   uint8_t min_value = 0, max_value = 99, x = 10, y = 1;
   uint8_t *value_to_edit = NULL;
   MEF_STATE next_state = state;
 
   switch (state) {
     case DEFAULT:
+		defaultAndUpdate();
       break;
     case EDIT_YEAR:
       value_to_edit = &time.years;

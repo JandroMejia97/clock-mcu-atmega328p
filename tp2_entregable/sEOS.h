@@ -10,7 +10,7 @@
 
 void SEOS_Init(void);
 void SEOS_Schedule_Tasks(void);
-void SEOS_Dispatch_Tasks (void);
+void SEOS_Dispatch_Tasks(void);
 
 
 

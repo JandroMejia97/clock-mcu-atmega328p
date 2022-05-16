@@ -26,6 +26,7 @@ void SEOS_Init() {
 
 void SEOS_Schedule_Tasks(void)
 {
+	static uint8_t flag = 0;
 	if (++cont_hora == 20) { // Cada 1 segundo	
 		flag_hora = 1;
 		cont_hora = 0;
@@ -38,7 +39,7 @@ void SEOS_Schedule_Tasks(void)
 
 
 void SEOS_Dispatch_Tasks (void) {
-	if (flag_hora) {	// M�s prioridad
+	if (flag_hora) {	// Mas prioridad
 		CLOCK_updateTime();
 		flag_hora = 0;
 	}

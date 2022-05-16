@@ -49,15 +49,15 @@ void CLOCK_updateTime(void) {
 		time.hours = 0;
 		time.days +=1;
 	}
-	if (time.days == max_days_for_each_month[time.months - 1]) { //Comparo el mes con mi vector de meses para ver si considero 31, 30 o 28 días.
+	if (time.days >= max_days_for_each_month[time.months - 1]) { //Comparo el mes con mi vector de meses para ver si considero 31, 30 o 28 días.
 		time.days = 1;
 		time.months +=1;
 	}
-	if (time.months == 12) {
+	if (time.months >= 12) {
 		time.months = 1;
 		time.years +=1;
 	}
-	if (time.years == 99) {
+	if (time.years >= 99) {
 		time.years = 0;
 	}
 }

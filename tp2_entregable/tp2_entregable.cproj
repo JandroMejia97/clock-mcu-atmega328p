@@ -314,9 +314,6 @@
     <None Include="src\config\conf_board.h">
       <SubType>compile</SubType>
     </None>
-    <Compile Include="src\main.c">
-      <SubType>compile</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\" />
