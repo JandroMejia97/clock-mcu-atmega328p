@@ -31,7 +31,7 @@ void SEOS_Schedule_Tasks(void)
 		flag_hora = 1;
 		cont_hora = 0;
 	}
-	if (++cont_mef == 2) { // Cada 100 ms
+	if (++cont_mef == 1) { // Cada 100 ms
 		flag_mef = 1; 
 		cont_mef = 0;
 	}

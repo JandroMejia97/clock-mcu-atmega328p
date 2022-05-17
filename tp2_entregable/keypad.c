@@ -8,9 +8,15 @@
 #define F_CPU 16000000UL
 #include <util/delay.h>
 
+const uint8_t port_masks[] = {0b00111100, 0b00000000};
+
 void KEYPAD_Init(void) {
-	 DDRB = 0x0F;   // D7..D4 como entrada, D3..D0 como salida.
-	 PORTB = 0x0F;	// Habilito pull-ups internos de las entradas
+	 // DDRB = 0x0F;   // D7..D4 como entrada, D3..D0 como salida.
+	 DDRD = DDRD & 0b00111100;
+	 DDRB = 0b00000000;
+	 PORTD = PORTD | 0b10111100;
+	 PORTB = PORTB & 0b11100110;
+	 // PORTB = 0x0F;	// Habilito pull-ups internos de las entradas
 }
 
 
@@ -25,7 +31,9 @@ const uint8_t keys[4][4] = {
 uint8_t KEYPAD_Scan(uint8_t *pressed_key) 
 {
 	uint8_t mask[] = {0b11111110, 0b11111101, 0b11111011, 0b11110111};
-	PORTB = 0xF0;
+	uint8_t n_mask[] = {0b11101111, 0b11110111, 0b11111110, 0b01110000};
+	
+	PORTB = 0b00011001;
 	uint8_t i, j;
 	for (i = 0; i<4; i++) {	//se barren las filas
 		PORTB |= mask[i];

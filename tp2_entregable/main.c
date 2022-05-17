@@ -17,10 +17,10 @@
 
 int main(void)
 {
-	// Inicializar LCD
-	LCDinit();
 	// inicializar teclado
 	KEYPAD_Init();
+	// Inicializar LCD
+	LCDinit();
 	// inicializar clock en 23:59:59
 	CLOCK_init();
 	// inicializar maq de estados

@@ -3,27 +3,34 @@
 
 #include <inttypes.h>
 
+//#include "main.h"
+
 
 //Uncomment this if LCD 4 bit interface is used
 //******************************************
 #define LCD_4bit
 //***********************************************
 
-#define LCD_RS	0 	//define MCU pin connected to LCD RS
+
+
+#define LCD_RS	1 	//define MCU pin connected to LCD RS
 #define LCD_RW	1 	//define MCU pin connected to LCD R/W
-#define LCD_E	2	//define MCU pin connected to LCD E
+#define LCD_E	0	//define MCU pin connected to LCD E
 #define LCD_D0	0	//define MCU pin connected to LCD D0
 #define LCD_D1	1	//define MCU pin connected to LCD D1
 #define LCD_D2	2	//define MCU pin connected to LCD D1
 #define LCD_D3	3	//define MCU pin connected to LCD D2
-#define LCD_D4	4	//define MCU pin connected to LCD D3
-#define LCD_D5	5	//define MCU pin connected to LCD D4
-#define LCD_D6	6	//define MCU pin connected to LCD D5
-#define LCD_D7	7	//define MCU pin connected to LCD D6
-#define LDP PORTD	//define MCU port connected to LCD data pins
+#define LCD_D4	1	//define MCU pin connected to LCD D3
+#define LCD_D5	2	//define MCU pin connected to LCD D4
+#define LCD_D6	2	//define MCU pin connected to LCD D5
+#define LCD_D7	000000000000001	//define MCU pin connected to LCD D6
+#define LDP1 PORTB	//define MCU port connected to LCD data pins
+#define LDP2 PORTC	//define MCU port connected to LCD data pins
 #define LCP PORTD	//define MCU port connected to LCD control pins
-#define LDDR DDRD	//define MCU direction register for port connected to LCD data pins
+#define LDDR1 DDRB	//define MCU direction register for port connected to LCD data pins
+#define LDDR2 DDRC	//define MCU direction register for port connected to LCD data pins
 #define LCDR DDRD	//define MCU direction register for port connected to LCD control pins
+
 
 #define LCD_CLR             0	//DB0: clear display
 #define LCD_HOME            1	//DB1: return to home position
@@ -81,7 +88,9 @@ void LCDcursorRight(uint8_t);	//shif cursor right by n
 // <length> is the number of LCD characters that the bargraph should cover
 //adapted from AVRLIB - displays progress only for 8 bit variables
 void LCDprogressBar(uint8_t progress, uint8_t maxprogress, uint8_t length);
+void LCD_Init();
+void LCD_Update();
 void LCDprintTwoDigitsNumber(uint8_t);
 
-
 #endif
+

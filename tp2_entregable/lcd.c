@@ -1,9 +1,13 @@
 #include "lcd.h"
+
 #include <inttypes.h>
-#define F_CPU 16000000UL
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 #include <util/delay.h>
+
+#define LCD_DATAWR(Data)		{LDP1 = (LDP1 & 0xF9) | ((Data & 0x40) >> 4) | ((Data & 0X80) >> 6); LDP2 = (LDP2 & 0xF9) | ((Data & 0X10) >> 3) | ((Data & 0X20) >> 3);}
+
+extern volatile unsigned int temp;
 
 const uint8_t LcdCustomChar[] PROGMEM=//define 8 custom LCD chars
 {
@@ -23,14 +27,16 @@ void LCDsendChar(uint8_t ch)		//Sends Char to LCD
 
 #ifdef LCD_4bit
 	//4 bit part
-	LDP=(ch&0b11110000);
+	//LDP=(ch&0b11110000);
+	LCD_DATAWR(ch&0b11110000);
 	LCP|=1<<LCD_RS;
 	LCP|=1<<LCD_E;		
 	_delay_us(40);
 	LCP&=~(1<<LCD_E);	
 	LCP&=~(1<<LCD_RS);
 	_delay_us(40);
-	LDP=((ch&0b00001111)<<4);
+	//LDP=((ch&0b00001111)<<4);
+	LCD_DATAWR((ch&0b00001111)<<4);
 	LCP|=1<<LCD_RS;
 	LCP|=1<<LCD_E;		
 	_delay_us(40);
@@ -52,12 +58,14 @@ void LCDsendCommand(uint8_t cmd)	//Sends Command to LCD
 {
 #ifdef LCD_4bit	
 	//4 bit part
-	LDP=(cmd&0b11110000);
+	//LDP=(cmd&0b11110000);
+	LCD_DATAWR(cmd&0b11110000);
 	LCP|=1<<LCD_E;		
 	_delay_ms(1);
 	LCP&=~(1<<LCD_E);
 	_delay_ms(1);
-	LDP=((cmd&0b00001111)<<4);	
+	//LDP=((cmd&0b00001111)<<4);	
+	LCD_DATAWR((cmd&0b00001111)<<4);	
 	LCP|=1<<LCD_E;		
 	_delay_ms(1);
 	LCP&=~(1<<LCD_E);
@@ -76,24 +84,32 @@ void LCDinit(void)//Initializes LCD
 #ifdef LCD_4bit	
 	//4 bit part
 	_delay_ms(15);
-	LDP=0x00;
+	//LDP=0x00;
+	LCD_DATAWR(0x00);	
 	LCP=0x00;
-	LDDR|=1<<LCD_D7|1<<LCD_D6|1<<LCD_D5|1<<LCD_D4;
+	DDRC|=0x06;
+	DDRB|=0x06;
+	LDDR1|=1<<LCD_D7|1<<LCD_D6;
+	LDDR2|=1<<LCD_D4|1<<LCD_D5;
+	//LDDR|=1<<LCD_D7|1<<LCD_D6|1<<LCD_D5|1<<LCD_D4;
 	LCDR|=1<<LCD_E|1<<LCD_RW|1<<LCD_RS;
    //---------one------
-	LDP=0<<LCD_D7|0<<LCD_D6|1<<LCD_D5|1<<LCD_D4; //4 bit mode
+	//LDP=0<<LCD_D7|0<<LCD_D6|1<<LCD_D5|1<<LCD_D4; //4 bit mode
+	LCD_DATAWR(0b00110000);	
 	LCP|=1<<LCD_E|0<<LCD_RW|0<<LCD_RS;		
 	_delay_ms(1);
 	LCP&=~(1<<LCD_E);
 	_delay_ms(1);
 	//-----------two-----------
-	LDP=0<<LCD_D7|0<<LCD_D6|1<<LCD_D5|1<<LCD_D4; //4 bit mode
+	//LDP=0<<LCD_D7|0<<LCD_D6|1<<LCD_D5|1<<LCD_D4; //4 bit mode
+	LCD_DATAWR(0b00110000);	
 	LCP|=1<<LCD_E|0<<LCD_RW|0<<LCD_RS;		
 	_delay_ms(1);
 	LCP&=~(1<<LCD_E);
 	_delay_ms(1);
 	//-------three-------------
-	LDP=0<<LCD_D7|0<<LCD_D6|1<<LCD_D5|0<<LCD_D4; //4 bit mode
+	//LDP=0<<LCD_D7|0<<LCD_D6|1<<LCD_D5|0<<LCD_D4; //4 bit mode
+	LCD_DATAWR(0b00100000);	
 	LCP|=1<<LCD_E|0<<LCD_RW|0<<LCD_RS;		
 	_delay_ms(1);
 	LCP&=~(1<<LCD_E);
@@ -374,7 +390,6 @@ void LCDprogressBar(uint8_t progress, uint8_t maxprogress, uint8_t length)
 		LCDsendChar(c);
 	}	
 }
-
 
 
 void LCDprintTwoDigitsNumber(uint8_t number) {
