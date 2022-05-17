@@ -35,7 +35,8 @@ void MEF_Update() {
 
   switch (state) {
     case DEFAULT:
-		defaultAndUpdate();
+      defaultAndUpdate();
+      next_state = EDIT_YEAR;
       break;
     case EDIT_YEAR:
       value_to_edit = &time.years;
