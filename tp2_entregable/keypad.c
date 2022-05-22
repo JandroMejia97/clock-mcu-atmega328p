@@ -52,7 +52,7 @@ uint8_t KEYPAD_Scan(uint8_t *pressed_key)
 		for (j = 0; j < 4; j++) {	//se barren las filas
 			if (j < 3) {
 				if ((~PINB) & rows_masks[j]) {
-					*pressed_key = keys[i][j];
+					*pressed_key = keys[j][i];
 					KEYPAD_Setup();
 					return 1;
 				}
