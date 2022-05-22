@@ -6,17 +6,17 @@ static TIME time;
 static void defaultAndUpdate() {
 	TIME time = CLOCK_getTime();
 	LCDGotoXY(4,0);
-	LCDprintTwoDigitsNumber(time.hours);
+	LCDescribeDato(time.hours, 2);
 	LCDsendChar(':');
-	LCDprintTwoDigitsNumber(time.minutes);
+	LCDescribeDato(time.minutes, 2);
 	LCDsendChar(':');
-	LCDprintTwoDigitsNumber(time.seconds);
+	LCDescribeDato(time.seconds, 2);
 	LCDGotoXY(4,1);
-	LCDprintTwoDigitsNumber(time.days);
+	LCDescribeDato(time.days, 2);
 	LCDsendChar('/');
-	LCDprintTwoDigitsNumber(time.months);
+	LCDescribeDato(time.months, 2);
 	LCDsendChar('/');
-	LCDprintTwoDigitsNumber(time.years);
+	LCDescribeDato(time.years, 2);
 }
 
 void MEF_Init() {
@@ -123,5 +123,5 @@ void edit_data(uint8_t min, uint8_t max, uint8_t pressed_key, uint8_t *data) {
 
 void print_data(uint8_t x, uint8_t y, uint8_t *data) {
   LCDGotoXY(x, y);
-  LCDprintTwoDigitsNumber(*data);
+  LCDescribeDato(*data, 2);
 }
