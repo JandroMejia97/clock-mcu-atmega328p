@@ -27,10 +27,9 @@ int main(void)
 	MEF_Init();
 	// habilito timers e interrupciones
 	SEOS_Init();
-    while (1) 
-    {
+    while (1) {
 		SEOS_Dispatch_Tasks();
-    }
+  }
 
 	return 0;
 

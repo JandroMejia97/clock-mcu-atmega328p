@@ -3,6 +3,7 @@
 #include <inttypes.h>
 #include <avr/io.h>
 #include <avr/pgmspace.h>
+#define F_CPU 16000000L
 #include <util/delay.h>
 
 #define LCD_DATAWR(Data)		{LDP1 = (LDP1 & 0xF9) | ((Data & 0x40) >> 4) | ((Data & 0X80) >> 6); LDP2 = (LDP2 & 0xF9) | ((Data & 0X10) >> 3) | ((Data & 0X20) >> 3);}
@@ -389,10 +390,4 @@ void LCDprogressBar(uint8_t progress, uint8_t maxprogress, uint8_t length)
 		// write character to display
 		LCDsendChar(c);
 	}	
-}
-
-
-void LCDprintTwoDigitsNumber(uint8_t number) {
-	LCDsendChar(number/10 + '0');
-	LCDsendChar(number%10 + '0');
 }
