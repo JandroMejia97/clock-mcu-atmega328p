@@ -26,7 +26,7 @@ typedef enum {
 
 void MEF_Init(void);
 void MEF_Update(void);
-void LCD_Blink(void);
+void LCD_Blink(uint8_t);
 
 void edit_data(uint8_t min, uint8_t max, uint8_t pressed_key, uint8_t *data);
 void print_data(uint8_t x, uint8_t y, uint8_t *data);

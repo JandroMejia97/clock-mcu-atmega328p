@@ -1,10 +1,26 @@
 #include "MEF_GENERAL.h"
 
+/**
+ * @brief Estado de la MED
+ */
 static MEF_STATE state;
+/**
+ * @brief Referencia a la estructura de datos del reloj.
+ */
 static TIME time;
+/**
+ * @brief Coordenadas de la pantalla
+ */
 static uint8_t x = 10, y = 1;
+/**
+ * @brief Puntero al valor del dígito que se está editando.
+ */
 static uint8_t *value_to_edit = NULL;
 
+/**
+ * @brief Método que se llama en el estado por defecto
+ * para que se muestre el tiempo actual.
+ */
 static void defaultAndUpdate() {
 	TIME time = CLOCK_getTime();
   value_to_edit = &time.years;
@@ -22,6 +38,10 @@ static void defaultAndUpdate() {
 	LCDescribeDato(time.years, 2);
 }
 
+/**
+ * @brief Método que inicializa la MEF.
+ * 
+ */
 void MEF_Init() {
   state = DEFAULT;
   LCDclr();
@@ -29,9 +49,13 @@ void MEF_Init() {
   defaultAndUpdate();
 }
 
+/**
+ * @brief Método que se llama una vez por segundo para actualizar el estado de la MEF.
+ */
 void MEF_Update() {
   uint8_t pressed_key = 0xFF;
   KEYPAD_Update(&pressed_key);
+  // Rango de los valores a editar
   uint8_t min_value = 0, max_value = 99;
   MEF_STATE next_state = EDIT_YEAR;
 
@@ -109,7 +133,7 @@ void MEF_Update() {
         defaultAndUpdate();
         time = CLOCK_getTime();
       } else {
-        LCD_Blink();
+        LCD_Blink(0);
       }
       state = next_state;
       break;
@@ -121,15 +145,31 @@ void MEF_Update() {
   
 }
 
-void LCD_Blink() {
+/**
+ * @brief Hace que la LCD parpadee cada cierto tiempo
+ * 
+ * @param showSpaces - Si es true, muestra espacios en vez de datos
+ */
+void LCD_Blink(uint8_t showSpaces) {
   if (state != DEFAULT) {
-    LCDGotoXY(x, y);
-    LCDsendChar(' ');
-    LCDsendChar(' ');
-    print_data(x, y, value_to_edit);
+	if (showSpaces) {
+	  LCDGotoXY(x, y);
+	  LCDsendChar(' ');
+	  LCDsendChar(' ');
+	} else {
+	  print_data(x, y, value_to_edit);
+	}
   }
 }
 
+/**
+ * @brief Imprime un dato en la LCD
+ * 
+ * @param min - Límite inferior del rango
+ * @param max - Límite superior del rango
+ * @param pressed_key - Tecla presionada
+ * @param data - Puntero al dato a modificar
+ */
 void edit_data(uint8_t min, uint8_t max, uint8_t pressed_key, uint8_t *data) {
   switch (pressed_key) {
     case 'B':
@@ -141,6 +181,13 @@ void edit_data(uint8_t min, uint8_t max, uint8_t pressed_key, uint8_t *data) {
     }
 }
 
+/**
+ * @brief Imprime un dato en la LCD
+ * 
+ * @param x - Posición en x
+ * @param y - Posición en y
+ * @param data - Puntero al dato a imprimir
+ */
 void print_data(uint8_t x, uint8_t y, uint8_t *data) {
   LCDGotoXY(x, y);
   LCDescribeDato(*data, 2);

@@ -8,9 +8,11 @@
 
 static TIME time;
 
+//Esta estructura nos sirve para identificar cual es el limite superior de días de cada mes, ya que algunos tienen 30, otros 31 y en el caso de febrero, 28. 
 const uint8_t max_days_for_each_month[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 void CLOCK_init(void) {
+	//Le damos los valores iniciales.
 	time.hours = 23;
 	time.minutes = 59;
 	time.seconds = 59;
@@ -19,10 +21,12 @@ void CLOCK_init(void) {
 	time.years = 21;
 }
 
+//Método que retorna los datos actuales del tiempo.
 TIME CLOCK_getTime(void) {
 	return time;
 }
 
+//Método para setear los nuevos valores del clock.
 void CLOCK_setTime(TIME newTime) {
 	//Copiamos campo a campo porque la estructura es un puntero.
 	time.hours = newTime.hours;
@@ -33,6 +37,7 @@ void CLOCK_setTime(TIME newTime) {
 	time.years = newTime.years;
 }
 
+//Se llamará a esta función una vez por segundo para ir actualizando el clock.
 void CLOCK_updateTime(void) {
 	//Se suma 1 segundo y se checkea si hubo "overflow" en segundos, minutos y horas, y consecuentemente se aumenta según corresponda el dia, mes y/o año.
 
