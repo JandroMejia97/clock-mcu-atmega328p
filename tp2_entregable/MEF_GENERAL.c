@@ -2,6 +2,8 @@
 
 static MEF_STATE state;
 static TIME time;
+static uint8_t show_spaces = 0, x = 10, y = 1;
+static uint8_t *value_to_edit = NULL;
 
 static void defaultAndUpdate() {
 	TIME time = CLOCK_getTime();
@@ -29,8 +31,7 @@ void MEF_Init() {
 void MEF_Update() {
   uint8_t pressed_key = 0xFF;
   KEYPAD_Update(&pressed_key);
-  uint8_t min_value = 0, max_value = 99, x = 10, y = 1;
-  uint8_t *value_to_edit = NULL;
+  uint8_t min_value = 0, max_value = 99;
   MEF_STATE next_state = EDIT_YEAR;
 
   switch (state) {
@@ -47,6 +48,7 @@ void MEF_Update() {
       max_value = 12;
       value_to_edit = &time.months;
       x = 7;
+      y = 1;
       next_state = EDIT_DAY;
       break;
     case EDIT_DAY:
@@ -54,13 +56,14 @@ void MEF_Update() {
       max_value = max_days_for_each_month[time.months - 1];
       value_to_edit = &time.days;
       x = 4;
+      y = 1;
       next_state = EDIT_SECOND;
       break;
     case EDIT_HOUR:
       min_value = 0;
       max_value = 23;
       value_to_edit = &time.hours;
-	  x = 4;
+      x = 4;
       y = 0;
       next_state = EDIT_DONE;
       break;
@@ -74,40 +77,64 @@ void MEF_Update() {
     case EDIT_SECOND:
       max_value = 59;
       value_to_edit = &time.seconds;
+      x = 10;
       y = 0;
       next_state = EDIT_MINUTE;
       break;
     case EDIT_DONE:
       CLOCK_setTime(time);
       next_state = DEFAULT;
-	  state = DEFAULT;
+      x = 10;
+      y = 1;
+      state = DEFAULT;
       break;
     case EDIT_CANCELED:
       state = DEFAULT;
+      x = 10;
+      y = 1;
       break;
   }
   
   switch (pressed_key) {
-	case 'B':
-	case 'C':
-	  if (state != DEFAULT) {
-		edit_data(min_value, max_value, pressed_key, value_to_edit);
-		print_data(x, y, value_to_edit);
-	  }
-	  break;
-	case 'A':
-	  if (state == DEFAULT){
-		  defaultAndUpdate();
-		  time = CLOCK_getTime();
-	  }
-	  state = next_state;
-	  break;
-	case 'D':
-	  state = EDIT_CANCELED;
-	  break;
+    case 'B':
+    case 'C':
+      if (state != DEFAULT) {
+        edit_data(min_value, max_value, pressed_key, value_to_edit);
+        print_data(x, y, value_to_edit);
+      }
+      break;
+    case 'A':
+      if (!show_spaces){
+        show_spaces = 0;
+        print_data(x, y, value_to_edit);
+      }
+      if (state == DEFAULT){
+        defaultAndUpdate();
+        time = CLOCK_getTime();
+      }
+      state = next_state;
+      break;
+    case 'D':
+      show_spaces = 0;
+      state = EDIT_CANCELED;
+      break;
   }
   
   
+}
+
+void LCD_Blink() {
+  if (state != DEFAULT) {
+    if (show_spaces) {
+      show_spaces = 0;
+      LCDGotoXY(x, y);
+      LCDsendChar(' ');
+      LCDsendChar(' ');
+    } else {
+      show_spaces = 1;
+      print_data(x, y, value_to_edit);
+    }
+  }
 }
 
 void edit_data(uint8_t min, uint8_t max, uint8_t pressed_key, uint8_t *data) {
