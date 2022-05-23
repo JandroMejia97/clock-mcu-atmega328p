@@ -12,6 +12,9 @@
 #include "lcd.h"
 #include "keypad.h"
 
+/**
+ * @brief Enumeracion de los estados de la MEF
+ */
 typedef enum {
   DEFAULT,
   EDIT_YEAR,
