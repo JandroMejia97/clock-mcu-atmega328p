@@ -11,11 +11,9 @@
 
 volatile unsigned char flag_hora = 0;
 volatile unsigned char flag_mef = 0;
-volatile unsigned char flag_blink = 0;
 
 static unsigned char cont_hora = 0;
 static unsigned char cont_mef = -1; // Arranca en el T = 50ms (1 tick m�s que la hora)
-static unsigned char cont_blink = 0;
 
 void SEOS_Init() {
 	TCCR1B |= (1 << WGM12);				// Modo CTC con OCR1A
@@ -37,27 +35,18 @@ void SEOS_Schedule_Tasks(void)
 		flag_mef = 1; 
 		cont_mef = 0;
 	}
-
-	if (++cont_blink == 7) { // Cada 0.5 segundos
-		flag_blink = 1;
-		cont_blink = 0;
-	}
 }
 
 
 void SEOS_Dispatch_Tasks (void) {
 	if (flag_hora) {	// Mas prioridad
 		CLOCK_updateTime();
+		LCD_Blink();
 		flag_hora = 0;
 	}
 	if (flag_mef) {
 		MEF_Update();
 		flag_mef = 0;
-	}
-
-	if (flag_blink) {
-		LCD_Blink();
-		flag_blink = 0;
 	}
 }
 

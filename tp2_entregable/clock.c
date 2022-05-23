@@ -34,30 +34,34 @@ void CLOCK_setTime(TIME newTime) {
 }
 
 void CLOCK_updateTime(void) {
-	//Se suma 1 segundo y se checkea si hubo "overflow" en segundos, minutos y horas.
-	time.seconds += 1;
-	
-	if (time.seconds == 60) {
+	//Se suma 1 segundo y se checkea si hubo "overflow" en segundos, minutos y horas, y consecuentemente se aumenta según corresponda el dia, mes y/o año.
+
+	if ((++time.seconds) > 59) {
 		time.seconds = 0;
-		time.minutes += 1;
+		time.minutes++;
 	}
-	if (time.minutes == 60) {
+
+	if (time.minutes > 59) {
 		time.minutes = 0;
-		time.hours += 1;
+		time.hours++;
 	}
-	if (time.hours == 24) {
+
+	if (time.hours > 23) {
 		time.hours = 0;
-		time.days +=1;
+		time.days++;
 	}
-	if (time.days >= max_days_for_each_month[time.months - 1]) { //Comparo el mes con mi vector de meses para ver si considero 31, 30 o 28 días.
+
+	if (time.days > max_days_for_each_month[time.months - 1]) { //Comparo el mes con mi vector de meses para ver si considero 31, 30 o 28 días.
 		time.days = 1;
-		time.months +=1;
+		time.months++;
 	}
-	if (time.months >= 12) {
+
+	if (time.months > 12) {
 		time.months = 1;
-		time.years +=1;
+		time.years++;
 	}
-	if (time.years >= 99) {
+
+	if (time.years > 99) {
 		time.years = 0;
 	}
 }

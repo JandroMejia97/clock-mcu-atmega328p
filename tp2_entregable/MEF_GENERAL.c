@@ -2,11 +2,12 @@
 
 static MEF_STATE state;
 static TIME time;
-static uint8_t show_spaces = 0, x = 10, y = 1;
+static uint8_t x = 10, y = 1;
 static uint8_t *value_to_edit = NULL;
 
 static void defaultAndUpdate() {
 	TIME time = CLOCK_getTime();
+  value_to_edit = &time.years;
 	LCDGotoXY(4,0);
 	LCDescribeDato(time.hours, 2);
 	LCDsendChar(':');
@@ -104,18 +105,15 @@ void MEF_Update() {
       }
       break;
     case 'A':
-      if (!show_spaces){
-        show_spaces = 0;
-        print_data(x, y, value_to_edit);
-      }
       if (state == DEFAULT){
         defaultAndUpdate();
         time = CLOCK_getTime();
+      } else {
+        LCD_Blink();
       }
       state = next_state;
       break;
     case 'D':
-      show_spaces = 0;
       state = EDIT_CANCELED;
       break;
   }
@@ -125,15 +123,10 @@ void MEF_Update() {
 
 void LCD_Blink() {
   if (state != DEFAULT) {
-    if (show_spaces) {
-      show_spaces = 0;
-      LCDGotoXY(x, y);
-      LCDsendChar(' ');
-      LCDsendChar(' ');
-    } else {
-      show_spaces = 1;
-      print_data(x, y, value_to_edit);
-    }
+    LCDGotoXY(x, y);
+    LCDsendChar(' ');
+    LCDsendChar(' ');
+    print_data(x, y, value_to_edit);
   }
 }
 
