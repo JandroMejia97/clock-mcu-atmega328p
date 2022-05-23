@@ -24,3 +24,4 @@
 # Proteus
 *.pdsbak
 *Backups/
+*.workspace
